@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador d'Activitats STEAM de Catalunya</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header>
+        <h1>Generador d'Activitats STEAM</h1>
+        <p>El teu assistent per a la robòtica i el pensament computacional a l'aula.</p>
+    </header>
+
+    <main>
+        <section id="questionnaire-section">
+            <div id="question-container" class="card">
+                </div>
+            <div id="progress-bar-container">
+                <div id="progress-bar"></div>
+            </div>
+        </section>
+
+        <section id="activity-section" class="hidden">
+            <div id="activity-output" class="card">
+                </div>
+            <div id="feedback-controls">
+                <p>Estàs satisfet/a amb la proposta?</p>
+                <button id="btn-accept">Sí, és perfecta!</button>
+                <button id="btn-adjust">Vull fer un ajust</button>
+            </div>
+            <div id="download-controls" class="hidden">
+                 <p>Activitat finalitzada! Ja la pots guardar o imprimir.</p>
+                <button id="btn-download">🖨️ Imprimeix o Guarda com a PDF</button>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>Creat com a eina de suport per al professorat de Catalunya.</p>
+    </footer>
+
+    <script src="generator.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
