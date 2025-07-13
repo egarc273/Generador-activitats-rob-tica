@@ -79,7 +79,7 @@ input[type="text"] {
 
 button, #submit-text-btn {
     background-color: var(--primary-color);
-    color: white;
+    color: black;
     border: none;
     font-weight: bold;
     text-align: center;
