@@ -1,0 +1,173 @@
+:root {
+    --primary-color: #007bff;
+    --secondary-color: #6c757d;
+    --background-color: #f8f9fa;
+    --text-color: #343a40;
+    --card-bg-color: #ffffff;
+    --card-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    --border-radius: 8px;
+}
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    line-height: 1.6;
+    margin: 0;
+    padding: 20px;
+}
+
+header, footer {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+header h1 {
+    color: var(--primary-color);
+}
+
+main {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.card {
+    background-color: var(--card-bg-color);
+    border-radius: var(--border-radius);
+    box-shadow: var(--card-shadow);
+    padding: 30px;
+    margin-bottom: 20px;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* --- Qüestionari --- */
+#question-container h2 {
+    margin-top: 0;
+    color: var(--primary-color);
+}
+
+.question-options {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.option-button, input[type="text"], button {
+    width: 100%;
+    padding: 15px;
+    border-radius: var(--border-radius);
+    border: 1px solid #ccc;
+    background-color: #f1f1f1;
+    cursor: pointer;
+    font-size: 16px;
+    text-align: left;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.option-button:hover {
+    background-color: #e0e0e0;
+    transform: translateY(-2px);
+}
+
+input[type="text"] {
+    cursor: text;
+}
+
+button, #submit-text-btn {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    font-weight: bold;
+    text-align: center;
+}
+
+button:hover, #submit-text-btn:hover {
+    opacity: 0.9;
+}
+
+#progress-bar-container {
+    width: 100%;
+    background-color: #e0e0e0;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    margin-top: 20px;
+}
+
+#progress-bar {
+    width: 0%;
+    height: 10px;
+    background-color: var(--primary-color);
+    transition: width 0.5s ease-in-out;
+}
+
+
+/* --- Activitat Generada --- */
+#activity-output h2 {
+    color: var(--primary-color);
+    border-bottom: 2px solid var(--primary-color);
+    padding-bottom: 10px;
+}
+
+#activity-output h3 {
+    color: var(--secondary-color);
+    margin-top: 30px;
+}
+
+#activity-output ul {
+    list-style-type: '✓ ';
+    padding-left: 20px;
+}
+
+.code-example {
+    background-color: #2d2d2d;
+    color: #f1f1f1;
+    padding: 15px;
+    border-radius: var(--border-radius);
+    overflow-x: auto;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.unplugged-activity {
+    background-color: #fffbe6;
+    border-left: 5px solid #f0ad4e;
+    padding: 15px;
+    margin-top: 20px;
+}
+
+#feedback-controls, #download-controls {
+    text-align: center;
+    padding: 20px;
+}
+
+#feedback-controls button, #download-controls button {
+    display: inline-block;
+    width: auto;
+    padding: 15px 30px;
+    margin: 0 10px;
+}
+
+#btn-adjust {
+    background-color: var(--secondary-color);
+}
+
+/* --- Estils per a impressió --- */
+@media print {
+    body {
+        padding: 0;
+        font-size: 12pt;
+    }
+    header, footer, #feedback-controls, #download-controls, #questionnaire-section {
+        display: none;
+    }
+    main {
+        max-width: 100%;
+    }
+    .card {
+        box-shadow: none;
+        border: 1px solid #ddd;
+    }
+}
