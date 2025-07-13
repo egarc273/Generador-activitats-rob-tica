@@ -1,0 +1,10 @@
+# Fitxers del sistema operatiu
+.DS_Store
+Thumbs.db
+
+# Fitxers de configuració d'editors
+.vscode/
+.idea/
+
+# Dependències de Node (si en el futur s'afegeixen)
+node_modules/
