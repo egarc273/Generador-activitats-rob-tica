@@ -1,4 +1,4 @@
-# Generador-activitats-rob-tica
+# Generador d'Activitats de Robòtica per a Docents de Catalunya
 Aquesta aplicació web està dissenyada per ajudar els docents d'infantil, primària i secundària de Catalunya a crear activitats de robòtica i programació educativa que fomentin el pensament computacional i s'alineïn amb el currículum vigent.
 
 ## ✨ Característiques
