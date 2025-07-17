@@ -1,8 +1,7 @@
 // =================================================================================
-// 1. BASE DE DADES CURRICULAR
+// 1. BASE DE DADES CURRICULAR (Infantil - Validat)
 // =================================================================================
 const curriculumData = {
-    // --> AFEGIT AMB LA TEVA VALIDACIÓ
     infantil: {
         decret: "DECRET 21/2023, de 7 de febrer",
         competencies: [
@@ -13,146 +12,135 @@ const curriculumData = {
             "Provar diferents solucions per fer front a un repte, observant els resultats obtinguts i explicant què ha passat (CA 2.2).",
             "Proposar seqüències ordenades d'accions i instruccions per resoldre tasques senzilles (CA 3.1).",
             "Utilitzar jocs i materials digitals i manipulables per a la creació, la comunicació i l'aprenentatge (CA 3.2)."
-        ],
-        sabers: [
-            "Relacions i propietats dels objectes (forma, color, mida).",
-            "Seqüenciació d'accions per a la realització d'una tasca.",
-            "Iniciació a la robòtica i llenguatges de programació.",
-            "Ús d'eines i suports digitals en contexts de joc i aprenentatge."
         ]
     },
-    primaria: {
-        // Aquesta secció l'omplirem en el següent pas
-        decret: "DECRET 175/2022, de 27 de setembre",
-        competencies: [],
-        criterisAvaluacio: {},
-        sabers: []
-    },
-    secundaria: {
-        // ...
-    }
+    primaria: { /* Per omplir */ },
+    secundaria: { /* Per omplir */ }
 };
 
 // =================================================================================
-// 2. BANC D'IDEES I ACTIVITATS
+// 2. BANC D'IDEES I ACTIVITATS (AMB LA NOVA ESTRUCTURA DETALLADA)
 // =================================================================================
 const activityBank = {
-    // --> NOU: Activitats específiques per a Infantil
     infantil: {
+        // --> NOU: Cada activitat és un objecte complet amb tots els detalls
         challenges: [
-            { 
-                material: 'Tale-bot', 
-                text: "En un mapa dibuixat a terra (el barri, el bosc...), programar el Tale-Bot perquè vagi des de 'casa' fins a l''escola' seguint un camí i evitant els obstacles. Es treballa la seqüenciació i la lateralitat."
+            {
+                material: 'Tale-bot',
+                title: "El camí secret del bosc",
+                objectius: [
+                    "Planificar una seqüència de passos lògics per arribar a un objectiu.",
+                    "Identificar i corregir errors en una seqüència (iniciació a la depuració).",
+                    "Utilitzar el llenguatge verbal per descriure accions i moviments.",
+                    "Col·laborar en petit grup per assolir un repte comú."
+                ],
+                desenvolupament: {
+                    fase1: "<strong>Conversa inicial (5 min):</strong> Asseguts en rotllana, preguntem als infants: Què és un mapa? Com podem dir-li a algú com anar d'un lloc a un altre? Recollim les seves idees sobre 'endavant', 'enrere', 'girar'.",
+                    fase2: "<strong>Presentació del repte (5 min):</strong> Presentem el Tale-Bot: 'Aquest és el nostre amic, el robot Tal. S'ha perdut al bosc i vol arribar al niu de l'esquirol per portar-li una gla. Aquest és el mapa del bosc (un tapís o paper gran a terra). Hem d'ajudar-lo a trobar el camí correcte donant-li les instruccions amb els botons'.",
+                    fase3: "<strong>Exploració i construcció (15-20 min):</strong> En petits grups, els infants tenen un Tale-Bot i un petit mapa. proven diferents seqüències. El docent els anima a provar i equivocar-se ('assaig-error'), fent preguntes com: 'Què ha passat? On volíem anar? Què podem canviar?'.",
+                    fase4: "<strong>Posada en comú (10 min):</strong> Cada grup mostra la seva solució a la resta. Han trobat tots el mateix camí? Hi ha camins més curts? Es verbalitza el procés: 'Primer hem anat endavant dues vegades, després hem girat a la dreta...'"
+                },
+                metodologia: "Aprenentatge basat en el joc i l'experimentació. El treball es realitza en <strong>petits grups cooperatius</strong> per fomentar la comunicació i la resolució conjunta de problemes. El docent actua com a <strong>facilitador</strong>, fent preguntes obertes que guiïn el descobriment, però sense donar la solució directa.",
+                instrumentsAvaluacio: [
+                    "<strong>Observació directa:</strong> Mitjançant una graella o rúbrica senzilla, el docent anota la participació, la col·laboració i si l'infant proposa seqüències o ajuda a corregir-les.",
+                    "<strong>Portafolis fotogràfic/vídeo:</strong> Documentar el procés dels grups amb fotos o vídeos curts que mostrin com proven, fallen i reajusten les seves seqüències.",
+                    "<strong>Conversa final:</strong> Recollir les verbalitzacions dels infants durant la posada en comú per avaluar la seva comprensió del procés."
+                ]
             },
+            // --> AQUÍ AFEGIRIES MÉS ACTIVITATS COMPLETES PER A INFANTIL AMB AQUESTA MATEIXA ESTRUCTURA
             {
                 material: 'Codey Rocky',
-                text: "Classificació de colors. Col·loquem targetes de diferents colors (vermell, verd, blau) i programem el Codey Rocky perquè, quan el seu sensor detecti un color, digui el nom del color o mostri una cara contenta a la pantalla LED."
-            },
-            {
-                material: 'Material desendollat',
-                text: "La recepta del sandvitx. En gran grup, crear les instruccions pas a pas per fer un sandvitx. Un docent o alumne fa de 'robot' i només pot executar les ordres exactes que li donen. Això evidencia la importància de donar instruccions precises i ordenades."
-            },
-            {
-                material: 'Scratch', // Adaptat per a Scratch JR o iniciació a Scratch
-                text: "Crear una petita animació. Programar un personatge (el gat) perquè es mogui d'una banda a l'altra de la pantalla i digui 'Hola!' quan arriba al final. Es treballa la seqüenciació bàsica d'ordres."
+                title: "L'explorador de colors",
+                // ... Omplir tots els camps com a l'exemple anterior ...
             }
-        ]
-    },
-    // Reptes genèrics si no es troba res específic
-    default: {
-        introductions: [
-            "Aquesta activitat connecta l'àrea de {subject} amb el pensament computacional. Es treballaran habilitats clau com la descomposició, el reconeixement de patrons, l'abstracció i el disseny d'algorismes.",
-            "Explorarem com la robòtica ens pot ajudar a entendre millor el concepte de {concept}. Ens centrarem en resoldre un petit repte de manera creativa i col·laborativa."
-        ],
-        challenges: [
-            { material: 'default', text: "Dissenyar i programar un sistema amb {material} que representi el concepte de {concept}. Els estudiants hauran de pensar en les entrades (sensors), els processos (lògica) i les sortides (actuadors, pantalla) del seu projecte." }
-        ],
-        evaluation: [
-            "Un cop finalitzat el repte, plantegeu aquestes preguntes en grup: Quin ha estat el pas més difícil? Per què? Si haguéssiu de tornar a començar, què faríeu diferent? Com heu utilitzat la descomposició per resoldre el problema?",
         ]
     }
 };
 
 // =================================================================================
-// 3. EL GENERADOR (El cervell que connecta tot)
+// 3. EL GENERADOR (Adaptat per construir la nova fitxa detallada)
 // =================================================================================
 const activityGenerator = {
-    getNivellComplet(userInput) { /* ... (el mateix codi d'abans) ... */ },
+    getNivellComplet(userInput) { /* ... (codi sense canvis) ... */ },
 
-    selectCurriculumElements(userInput) {
-        const { level } = userInput;
-        const data = curriculumData[level];
-        if (!data) return { competencies: "", criteria: "", sabers: "", decret: "" };
-
-        const competencies = data.competencies.map(c => `<li><strong>${c.id}:</strong> ${c.text}</li>`).join('');
-        const criteria = data.criterisAvaluacio.map(c => `<li>${c}</li>`).join('');
-        const sabers = data.sabers.map(s => `<li>${s}</li>`).join('');
-
-        return {
-            competencies: `<ul>${competencies}</ul>`,
-            criteria: `<ul>${criteria}</ul>`,
-            sabers: `<ul>${sabers}</ul>`,
-            decret: data.decret
-        };
-    },
-    
-    selectChallenge(userInput) {
-        const { level, material, concept } = userInput;
-        let challenge;
-
-        // 1. Busquem reptes específics per al nivell i material
-        if (activityBank[level] && activityBank[level].challenges) {
-            challenge = activityBank[level].challenges.find(c => c.material === material);
-        }
-        
-        // 2. Si no en trobem, busquem un repte per defecte
-        if (!challenge) {
-            challenge = activityBank.default.challenges.find(c => c.material === 'default');
-        }
-
-        let challengeText = challenge.text.replace('{material}', material).replace('{concept}', concept);
-        return `<h4>Repte Proposat amb ${material}</h4><p>${challengeText}</p>`;
-    },
-
+    // --> MODIFICAT: La funció principal ara construeix la fitxa amb molt més detall
     generate(userInput) {
-        const { subject, concept, duration } = userInput;
-        
+        const { level, material, duration, subject, concept } = userInput;
+
+        // 1. Seleccionar una activitat completa del banc d'idees
+        let activity;
+        if (activityBank[level] && activityBank[level].challenges) {
+            activity = activityBank[level].challenges.find(c => c.material === material);
+        }
+
+        // Si no es troba una activitat específica, es podria mostrar un missatge
+        if (!activity) {
+            return `<h2>Ho sentim</h2><p>De moment no tenim una activitat detallada per a <strong>${material}</strong> en el nivell d'<strong>Educació Infantil</strong>. Estem treballant per afegir-ne més!</p>`;
+        }
+
+        // 2. Obtenir les dades curriculars
+        const curriculum = curriculumData[level];
         const nivellComplet = this.getNivellComplet(userInput);
-        const curriculum = this.selectCurriculumElements(userInput);
-        const challengeHTML = this.selectChallenge(userInput);
 
-        // Agafem una introducció i avaluació genèriques (es pot millorar més endavant)
-        const intro = activityBank.default.introductions[Math.floor(Math.random() * activityBank.default.introductions.length)]
-                        .replace('{subject}', subject).replace('{concept}', concept);
-        const evalText = activityBank.default.evaluation[0];
-
-        // Construïm l'HTML final
+        // 3. Construir l'HTML final amb la nova estructura detallada
         return `
-            <h2>Proposta d'Activitat: ${concept} a ${subject}</h2>
-            <p><strong>Nivell:</strong> ${nivellComplet} | <strong>Durada estimada:</strong> ${duration}</p>
-            
-            <h3>a) Marc Curricular (${curriculum.decret})</h3>
-            <p>Aquesta activitat està dissenyada per treballar les següents <strong>competències específiques</strong>:</p>
-            ${curriculum.competencies}
-            <p>Per fer-ho, es mobilitzaran els següents <strong>sabers</strong>:</p>
-            ${curriculum.sabers}
-            
-            <h3>b) Introducció</h3>
-            <p>${intro}</p>
+            <div class="activity-sheet">
+                <!-- TÍTOL I FITXA TÈCNICA -->
+                <h2>${activity.title}</h2>
+                <div class="fitxa-tecnica">
+                    <p><strong>Nivell:</strong> ${nivellComplet}</p>
+                    <p><strong>Durada estimada:</strong> ${duration}</p>
+                    <p><strong>Material Principal:</strong> ${material}</p>
+                    <p><strong>Agrupament:</strong> Petits grups cooperatius</p>
+                </div>
 
-            <h3>c) Descripció del Desafiament</h3>
-            ${challengeHTML}
-            
-            <h3>d) Reflexió i Avaluació</h3>
-            <p>Per avaluar l'assoliment, podem utilitzar els següents <strong>criteris d'avaluació</strong> com a guia:</p>
-            ${curriculum.criteria}
-            <p>A més, podem plantejar preguntes per a la reflexió en grup:</p>
-            <p><em>${evalText}</em></p>
+                <!-- 1. OBJECTIUS D'APRENENTATGE -->
+                <h3>1. Objectius d'Aprenentatge</h3>
+                <p>Amb aquesta activitat, es pretén que els infants siguin capaços de:</p>
+                <ul>
+                    ${activity.objectius.map(obj => `<li>${obj}</li>`).join('')}
+                </ul>
+                <p class="curricular-note">Aquests objectius contribueixen al desenvolupament de les <strong>competències específiques ${curriculum.competencies.map(c => c.id).join(' i ')}</strong> del ${curriculum.decret}.</p>
+
+                <!-- 2. DESENVOLUPAMENT DE L'ACTIVITAT (PAS A PAS) -->
+                <h3>2. Desenvolupament de l'Activitat</h3>
+                <div class="fase">
+                    <h4>Fase 1: Conversa Inicial i Activació</h4>
+                    <p>${activity.desenvolupament.fase1}</p>
+                </div>
+                <div class="fase">
+                    <h4>Fase 2: Presentació del Repte</h4>
+                    <p>${activity.desenvolupament.fase2}</p>
+                </div>
+                <div class="fase">
+                    <h4>Fase 3: Exploració i Construcció</h4>
+                    <p>${activity.desenvolupament.fase3}</p>
+                </div>
+                <div class="fase">
+                    <h4>Fase 4: Posada en Comú i Reflexió</h4>
+                    <p>${activity.desenvolupament.fase4}</p>
+                </div>
+
+                <!-- 3. METODOLOGIA -->
+                <h3>3. Metodologia</h3>
+                <p>${activity.metodologia}</p>
+
+                <!-- 4. AVALUACIÓ -->
+                <h3>4. Avaluació</h3>
+                <p>L'avaluació serà formativa i contínua, centrada en el procés. Es tindran en compte els següents <strong>criteris d'avaluació</strong> de referència:</p>
+                <ul>
+                    ${curriculum.criterisAvaluacio.map(c => `<li>${c}</li>`).join('')}
+                </ul>
+                <p>Es proposen els següents <strong>instruments d'avaluació</strong>:</p>
+                <ul>
+                    ${activity.instrumentsAvaluacio.map(inst => `<li>${inst}</li>`).join('')}
+                </ul>
+            </div>
         `;
     }
 };
 
-// No oblidis mantenir aquesta funció
+// Manté aquesta funció auxiliar aquí
 activityGenerator.getNivellComplet = function(userInput) {
     const { level, cycle_primary, cycle_secondary } = userInput;
     let nivellText;
