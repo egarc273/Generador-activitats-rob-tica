@@ -1,4 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // Missatge de depuració per saber que l'arxiu s'ha carregat
+    console.log("Script.js carregat i llest per començar.");
+
     // Referències als elements del DOM
     const questionnaireSection = document.getElementById('questionnaire-section');
     const questionContainer = document.getElementById('question-container');
@@ -17,7 +20,6 @@ document.addEventListener('DOMContentLoaded', () => {
     let userAnswers = {};
     let visibleStep = 1;
 
-    // --> AQUESTA ÉS LA VERSIÓ COMPLETA I CORRECTA DE L'ARRAY DE PREGUNTES
     const questions = [
         {
             key: 'level',
@@ -50,7 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
         {
             key: 'subject',
             text: 'Selecciona tots els sabers que vulguis treballar a l\'activitat:',
-            type: 'checkbox', // Nou tipus per a selecció múltiple
+            type: 'checkbox',
         },
         {
             key: 'concept',
@@ -142,7 +144,8 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         } else if (questions[currentQuestionIndex].type === 'text') {
             const input = document.getElementById('text-input');
-            document.getElementById('submit-text-btn').addEventListener('click', () => {
+            const submitBtn = document.getElementById('submit-text-btn');
+            submitBtn.addEventListener('click', () => {
                 if (input.value.trim()) handleAnswer(input.value.trim());
             });
             input.addEventListener('keypress', (e) => {
@@ -172,6 +175,34 @@ document.addEventListener('DOMContentLoaded', () => {
         activityOutput.innerHTML = activityHTML;
     }
     
-    // ... (la resta de funcions com reset, botons, etc. es mantenen igual)
-    // Per brevetat no les copio, però han d'estar al teu fitxer.
+    function resetAndRestart() {
+        currentQuestionIndex = 0;
+        userAnswers = {};
+        visibleStep = 1;
+        activitySection.classList.add('hidden');
+        questionnaireSection.classList.remove('hidden');
+        feedbackControls.classList.remove('hidden');
+        downloadControls.classList.add('hidden');
+        progressBar.style.width = '0%';
+        showQuestion();
+    }
+
+    // AQUESTES FUNCIONS SÓN ESSENCIALS I POTSER S'HAVIEN PERDUT
+    btnAccept.addEventListener('click', () => {
+        feedbackControls.classList.add('hidden');
+        downloadControls.classList.remove('hidden');
+        activityOutput.style.border = '2px solid green';
+    });
+
+    btnAdjust.addEventListener('click', () => {
+        alert("Aquesta funció et permetria ajustar la proposta. De moment, reiniciarem el procés.");
+        resetAndRestart();
+    });
+
+    btnDownload.addEventListener('click', () => {
+        window.print();
+    });
+
+    // Iniciar l'aplicació
+    showQuestion();
 });
