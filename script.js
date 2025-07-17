@@ -1,13 +1,10 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Missatge de depuració per saber que l'arxiu s'ha carregat
-    console.log("Script.js carregat i llest per començar.");
-
     // Referències als elements del DOM
     const questionnaireSection = document.getElementById('questionnaire-section');
     const questionContainer = document.getElementById('question-container');
     const activitySection = document.getElementById('activity-section');
     const activityOutput = document.getElementById('activity-output');
-    const progressBar = document.getElementById('progress-bar');
+    const progressBar = document.getElementById('progress-bar'); // Encara que no l'usem, el deixem per si de cas
     
     const btnAccept = document.getElementById('btn-accept');
     const btnAdjust = document.getElementById('btn-adjust');
@@ -20,6 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let userAnswers = {};
     let visibleStep = 1;
 
+    // L'array de preguntes complet
     const questions = [
         {
             key: 'level',
@@ -86,15 +84,19 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     ];
     
+    // --> CORRECCIÓ: Simplifiquem la lògica de mostrar la pregunta
     function showQuestion() {
         if (currentQuestionIndex >= questions.length) {
             generateActivity();
             return;
         }
+        
         const question = questions[currentQuestionIndex];
         
+        // Comprovem si la pregunta s'ha de saltar
         if (question.condition && !question.condition(userAnswers)) {
             currentQuestionIndex++;
+            // No incrementem visibleStep aquí, perquè la pregunta no s'ha mostrat
             showQuestion();
             return;
         }
@@ -104,12 +106,16 @@ document.addEventListener('DOMContentLoaded', () => {
         if (question.type === 'checkbox') {
             const dynamicOptions = activityGenerator.getCurricularSabers(userAnswers);
             optionsHTML = `<div class="checkbox-container">`;
-            optionsHTML += dynamicOptions.map(option => `
-                <div class="checkbox-item">
-                    <input type="checkbox" id="${option.value}" name="subject" value="${option.value}">
-                    <label for="${option.value}">${option.label}</label>
-                </div>
-            `).join('');
+            if (dynamicOptions && dynamicOptions.length > 0) {
+                optionsHTML += dynamicOptions.map(option => `
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="${option.value}" name="subject" value="${option.value}">
+                        <label for="${option.value}">${option.label}</label>
+                    </div>
+                `).join('');
+            } else {
+                 optionsHTML += `<p>No hi ha sabers definits per a aquest nivell.</p>`;
+            }
             optionsHTML += `</div><button id="submit-checkbox-btn" class="option-button">Següent</button>`;
         } else if (question.type === 'text') {
             optionsHTML = `
@@ -164,7 +170,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const questionKey = questions[currentQuestionIndex].key;
         userAnswers[questionKey] = answer;
         currentQuestionIndex++;
-        visibleStep++; 
+        visibleStep++; // Només incrementem el pas visible quan s'ha respost una pregunta
         showQuestion();
     }
     
@@ -183,11 +189,9 @@ document.addEventListener('DOMContentLoaded', () => {
         questionnaireSection.classList.remove('hidden');
         feedbackControls.classList.remove('hidden');
         downloadControls.classList.add('hidden');
-        progressBar.style.width = '0%';
         showQuestion();
     }
 
-    // AQUESTES FUNCIONS SÓN ESSENCIALS I POTSER S'HAVIEN PERDUT
     btnAccept.addEventListener('click', () => {
         feedbackControls.classList.add('hidden');
         downloadControls.classList.remove('hidden');
