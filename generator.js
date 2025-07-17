@@ -4,7 +4,6 @@
 const curriculumData = {
     infantil: {
         decret: "DECRET 21/2023, de 7 de febrer (Segon Cicle)",
-        // --> TOTES les 8 Competències Específiques
         competencies: [
             { id: "CE1", area: "Creixement en Harmonia", text: "Progressar en el coneixement i el domini del seu cos, en la imatge que en té, i en les possibilitats d'acció, tot mostrant un nivell de confiança ajustat i una actitud d'acceptació de les pròpies característiques i les de les altres persones." },
             { id: "CE2", area: "Creixement en Harmonia", text: "Assolir progressivament el benestar emocional, tot identificant, gestionant i expressant les seves emocions i necessitats, i desenvolupant l'autoconfiança i l'actitud d'aprenentatge." },
@@ -15,13 +14,14 @@ const curriculumData = {
             { id: "CE1", area: "Comunicació i Representació", text: "Manifestar interès per interactuar en situacions quotidianes, a través de l'exploració i l'ús del seu repertori comunicatiu, per expressar les seves necessitats i intencions i enfortir les relacions socials." },
             { id: "CE2", area: "Comunicació i Representació", text: "Interpretar i comprendre missatges i representacions, tot utilitzant coneixements i experiències propis per respondre a les demandes de l'entorn i construir nous aprenentatges." },
         ],
-        criterisAvaluacio: [ /* Sense canvis de moment */ ],
-        // --> LLISTA COMPLETA DE SABERS
+        criterisAvaluacio: [
+            "Provar diferents solucions per fer front a un repte, observant els resultats obtinguts i explicant què ha passat (CA 2.2).",
+            "Proposar seqüències ordenades d'accions i instruccions per resoldre tasques senzilles (CA 3.1).",
+            "Utilitzar jocs i materials digitals i manipulables per a la creació, la comunicació i l'aprenentatge (CA 3.2)."
+        ],
         sabers: [
-            // Existents
             { label: "Relacions i propietats dels objectes", value: "propietats_objectes" },
             { label: "Pensament computacional", value: "pensament_computacional" },
-            // Nous
             { label: "Cos, moviment i autonomia", value: "cos_moviment" },
             { label: "Desenvolupament de l'afectivitat", value: "afectivitat" },
             { label: "Orientació espai-temps", value: "espai_temps" },
@@ -42,13 +42,21 @@ const curriculumData = {
     secundaria: { /*...*/ }
 };
 
-// =================================================================================
-// 2. BANC D'IDEES (Ampliat per cobrir nous sabers)
-// =================================================================================
 const activityBank = {
     infantil: {
-        baseTemplate: { /*...*/ },
-        challenges: [ /*...*/ ],
+        baseTemplate: {
+             metodologia: "L'activitat es planteja des d'una perspectiva lúdica i manipulativa. S'organitzarà l'aula en <strong>racons o estacions de treball</strong> on els infants, en <strong>petits grups</strong>, podran explorar el material de manera autònoma. El docent adoptarà un rol de <strong>facilitador</strong>, acompanyant els grups, fent preguntes obertes per estimular el raonament ('Què passa si...? Per què creus que...?') i documentant el procés, però sense donar solucions directes.",
+            instrumentsAvaluacio: [
+                "<strong>Observació directa i sistemàtica:</strong> Amb una graella d'observació per registrar la interacció amb el material, les estratègies de resolució de problemes i la comunicació d'idees.",
+                "<strong>Recull de produccions:</strong> Fotografies o vídeos curts del procés i del resultat final aconseguit pels grups.",
+                "<strong>Converses individuals i de grup:</strong> Per recollir les explicacions dels infants sobre el que han fet i com ho han aconseguit."
+            ]
+        },
+        challenges: [
+            { material: 'talebot', text: "Programar el Tale-Bot per a que segueixi un camí dibuixat en un mapa que representi el concepte de <strong>'{concept}'</strong>." },
+            { material: 'codeyrocky', text: "Programar el Codey Rocky per a que reaccioni de manera diferent a targetes de colors relacionades amb <strong>'{concept}'</strong>." },
+            { material: 'unplugged', text: "Crear una 'coreografia' o un circuit humà on els infants representin amb el seu cos els passos per explicar <strong>'{concept}'</strong>."}
+        ],
         preparationIdeas: {
             "propietats_objectes": { vocabulary: ["Gran", "Petit", "Vermell", "Blau"], visuals: "Targetes amb formes geomètriques." },
             "pensament_computacional": { vocabulary: ["Ordre", "Seqüència", "Codi"], visuals: "Targetes amb icones d'accions." },
@@ -56,27 +64,28 @@ const activityBank = {
             "llenguatge_matematic": { vocabulary: ["Un, dos, tres...", "Més que", "Menys que"], visuals: "Gomets, reglets, daus grans." },
             "expressio_musical": { vocabulary: ["So", "Silenci", "Ritme", "Cançó"], visuals: "Imatges d'instruments musicals." },
             "medi_natural": { vocabulary: ["Fulla", "Pedra", "Aigua", "Animal"], visuals: "Fotos d'elements de la natura, lupes per observar." }
-            // Afegeix més idees per a la resta de sabers...
         }
     }
 };
 
-// =================================================================================
-// 3. EL GENERADOR (Adaptat per processar arrays)
-// =================================================================================
 const activityGenerator = {
-    getCurricularSabers(userInput) { /*...*/ },
-    getNivellComplet(userInput) { /*...*/ },
+    getCurricularSabers(userInput) {
+        const { level } = userInput;
+        return curriculumData[level]?.sabers ?? [];
+    },
+
+    getNivellComplet(userInput) {
+        if (userInput.level === 'infantil') {
+            return "Segon Cicle d'Educació Infantil";
+        }
+        // ... (resta del codi) ...
+    },
 
     generate(userInput) {
-        // 'subject' ara és un array: ['pensament_computacional', 'llenguatge_matematic']
         const { level, material, duration, subject: sabersSeleccionats, concept } = userInput;
-
-        // ... (validacions inicials sense canvis) ...
         const curriculum = curriculumData[level];
-        const nivellComplet = this.getNivellComplet(userInput);
-
-        // --> NOU: Processament de múltiples sabers
+        if (!curriculum) return "<div>Error: No s'han trobat dades curriculars per a aquest nivell.</div>";
+        
         let prepVocabulary = new Set();
         let prepVisuals = new Set();
         (sabersSeleccionats || []).forEach(saberKey => {
@@ -92,43 +101,35 @@ const activityGenerator = {
             preparationHTML = `
                 <div class="preparation-box">
                     <h4>Idees per a la preparació</h4>
-                    <p>Per enriquir l'activitat i facilitar la comprensió, es poden preparar els següents materials:</p>
                     <ul>
-                        ${prepVocabulary.size > 0 ? `<li><strong>Vocabulari clau a introduir:</strong> ${Array.from(prepVocabulary).join(', ')}.</li>` : ''}
-                        ${prepVisuals.size > 0 ? `<li><strong>Suport visual suggerit:</strong> ${Array.from(prepVisuals).join(' ')}</li>` : ''}
+                        ${prepVocabulary.size > 0 ? `<li><strong>Vocabulari clau:</strong> ${Array.from(prepVocabulary).join(', ')}.</li>` : ''}
+                        ${prepVisuals.size > 0 ? `<li><strong>Suport visual:</strong> ${Array.from(prepVisuals).join(' ')}</li>` : ''}
                     </ul>
                 </div>`;
         }
-
+        
         const sabersLabels = (sabersSeleccionats || []).map(saberKey => {
             return curriculum.sabers.find(s => s.value === saberKey)?.label ?? saberKey;
         }).join(', ');
         
-        // --> NOU: Llistat complet de competències
         const competenciesHTML = curriculum.competencies.map(c => `<li><strong>${c.area} (${c.id}):</strong> ${c.text}</li>`).join('');
+        const challengeText = activityBank[level]?.challenges.find(c => c.material.toLowerCase().replace(/[- ]/g, '') === material)?.text.replace(/{concept}/g, `<strong>${concept}</strong>`) ?? "Repte no definit per a aquest material.";
 
         return `
             <div class="activity-sheet">
                 <h2>Proposta d'Activitat: ${concept} amb ${material}</h2>
                 <div class="fitxa-tecnica">
-                    <p><strong>Nivell:</strong> ${nivellComplet}</p>
+                    <p><strong>Nivell:</strong> ${this.getNivellComplet(userInput)}</p>
                     <p><strong>Durada:</strong> ${duration}</p>
                     <p><strong>Sabers Implicats:</strong> ${sabersLabels}</p>
                 </div>
-
-                <h3>1. Marc Curricular de Referència (${curriculum.decret})</h3>
-                <p>Aquesta activitat, de caràcter globalitzat, contribueix al desenvolupament de les següents <strong>competències específiques</strong>:</p>
+                <h3>1. Marc Curricular (${curriculum.decret})</h3>
+                <p>Aquesta activitat contribueix al desenvolupament de les següents <strong>competències específiques</strong>:</p>
                 <ul>${competenciesHTML}</ul>
-
-                <!-- ... (La resta de la fitxa s'ha d'ajustar per reflectir aquesta nova riquesa) ... -->
                 <h3>2. Desenvolupament de l'Activitat</h3>
-                <p>L'activitat es planteja com un petit projecte d'exploració per treballar el concepte de <strong>'${concept}'</strong> a través dels sabers de <strong>${sabersLabels}</strong>.</p>
-                <!-- ... La resta de la plantilla pot seguir una estructura similar, però ara el docent sap que ha d'integrar tots aquests sabers. -->
+                <p>Repte principal: ${challengeText}</p>
                 ${preparationHTML}
-                <!-- ... -->
-            </div>
-        `;
+                <!-- ... resta de la plantilla ... -->
+            </div>`;
     }
 };
-
-// ... (codi de getCurricularSabers i getNivellComplet sense canvis) ...
