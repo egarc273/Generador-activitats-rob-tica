@@ -1,6 +1,57 @@
 // Aquest objecte 'activityGenerator' conté tota la lògica i plantilles
 // per crear les propostes d'activitats.
 const activityGenerator = {
+
+    // --> NOU: Funció auxiliar per obtenir el text complet del nivell.
+    getNivellComplet(userInput) {
+        const { level, cycle_primary, cycle_secondary } = userInput;
+        
+        // Comencem amb el valor base
+        let nivellText;
+        switch (level) {
+            case 'infantil':
+                nivellText = 'Educació Infantil';
+                break;
+            case 'primaria':
+                nivellText = 'Educació Primària';
+                break;
+            case 'secundaria':
+                nivellText = 'Educació Secundària';
+                break;
+            default:
+                nivellText = 'Nivell no especificat';
+        }
+
+        // Si hi ha un cicle de primària seleccionat, l'afegim
+        if (cycle_primary) {
+            switch (cycle_primary) {
+                case 'primaria_inicial':
+                    nivellText += ', Cicle Inicial';
+                    break;
+                case 'primaria_mitja':
+                    nivellText += ', Cicle Mitjà';
+                    break;
+                case 'primaria_superior':
+                    nivellText += ', Cicle Superior';
+                    break;
+            }
+        }
+        
+        // Si hi ha un cicle de secundària seleccionat, l'afegim
+        if (cycle_secondary) {
+            switch (cycle_secondary) {
+                case 'eso_1_2':
+                    nivellText += ', 1r i 2n d\'ESO';
+                    break;
+                case 'eso_3_4':
+                    nivellText += ', 3r i 4t d\'ESO';
+                    break;
+            }
+        }
+
+        return nivellText;
+    },
+
     generate(userInput) {
         // Aquesta és la funció principal que construeix l'activitat.
         // A la pràctica, tindria una lògica més complexa per combinar
@@ -9,17 +60,23 @@ const activityGenerator = {
         // Per a aquest exemple, retornem una plantilla completa
         // personalitzada amb les dades de l'usuari.
         
-        const { level, subject, concept, material, duration } = userInput;
+        // --> MODIFICAT: Ara ja no fem servir 'level' directament a la plantilla.
+        const { subject, concept, material, duration } = userInput;
+
+        // --> NOU: Cridem la nostra nova funció per obtenir el text del nivell.
+        const nivellComplet = this.getNivellComplet(userInput);
 
         // Aquí podríem tenir funcions que trien el text adequat
         // segons el nivell, la matèria, etc.
-        // getIntroduction(level, subject)
+        // getIntroduction(nivellComplet, subject)
         // getChallenge(concept, material)
-        // getEvaluation(level)
+        // getEvaluation(nivellComplet)
 
         return `
             <h2>Proposta d'Activitat: ${concept} a ${subject}</h2>
-            <p><strong>Nivell:</strong> ${level} | <strong>Durada estimada:</strong> ${duration}</p>
+            
+            <!-- AQUESTA LÍNIA S'HA MODIFICAT -->
+            <p><strong>Nivell:</strong> ${nivellComplet} | <strong>Durada estimada:</strong> ${duration}</p>
             
             <h3>a) Introducció</h3>
             <p>Aquesta activitat connecta l'àrea de <strong>${subject}</strong> amb el pensament computacional. Es treballaran habilitats clau com la <strong>descomposició</strong> (dividir el repte en parts petites), el <strong>reconeixement de patrons</strong> (identificar repeticions), l'<strong>abstracció</strong> (centrar-se en l'essencial) i el <strong>disseny d'algorismes</strong> (crear instruccions pas a pas). Aquestes competències estan alineades amb les àrees transversals del Decret 175/2022 d'ordenació dels ensenyaments de l'educació bàsica.</p>
