@@ -23,10 +23,10 @@ const curriculumData = {
 // =================================================================================
 const activityBank = {
     infantil: {
-        // --> NOU: Cada activitat és un objecte complet amb tots els detalls
         challenges: [
             {
-                material: 'Tale-bot',
+                // --> IMPORTANT: Utilitzarem valors nets (minúscules, sense guions) per fer la cerca més fàcil
+                material: 'talebot', 
                 title: "El camí secret del bosc",
                 objectius: [
                     "Planificar una seqüència de passos lògics per arribar a un objectiu.",
@@ -47,42 +47,48 @@ const activityBank = {
                     "<strong>Conversa final:</strong> Recollir les verbalitzacions dels infants durant la posada en comú per avaluar la seva comprensió del procés."
                 ]
             },
-            // --> AQUÍ AFEGIRIES MÉS ACTIVITATS COMPLETES PER A INFANTIL AMB AQUESTA MATEIXA ESTRUCTURA
             {
-                material: 'Codey Rocky',
+                material: 'codeyrocky', // Valor net
                 title: "L'explorador de colors",
-                // ... Omplir tots els camps com a l'exemple anterior ...
+                objectius: ["Identificar colors bàsics.", "Associar un color a una reacció (llum o so)."],
+                desenvolupament: { fase1: "...", fase2: "...", fase3: "...", fase4: "..." },
+                metodologia: "...",
+                instrumentsAvaluacio: ["..."]
             }
         ]
     }
 };
 
 // =================================================================================
-// 3. EL GENERADOR (Adaptat per construir la nova fitxa detallada)
+// 3. EL GENERADOR (Amb la lògica de cerca corregida)
 // =================================================================================
 const activityGenerator = {
     getNivellComplet(userInput) { /* ... (codi sense canvis) ... */ },
 
-    // --> MODIFICAT: La funció principal ara construeix la fitxa amb molt més detall
     generate(userInput) {
-        const { level, material, duration, subject, concept } = userInput;
+        const { level, material, duration } = userInput;
+        
+        // --> INICI DE LA CORRECCIÓ
+        // 1. Netejem el valor del material rebut de l'usuari per fer-lo coincidir amb el de la base de dades
+        const normalizedMaterial = material.toLowerCase().replace(/[- ]/g, '');
 
-        // 1. Seleccionar una activitat completa del banc d'idees
+        // 2. Seleccionar una activitat del banc d'idees amb el valor netejat
         let activity;
         if (activityBank[level] && activityBank[level].challenges) {
-            activity = activityBank[level].challenges.find(c => c.material === material);
+            activity = activityBank[level].challenges.find(c => c.material === normalizedMaterial);
         }
+        // --> FI DE LA CORRECCIÓ
 
-        // Si no es troba una activitat específica, es podria mostrar un missatge
+        // Si no es troba una activitat específica, es mostra un missatge
         if (!activity) {
-            return `<h2>Ho sentim</h2><p>De moment no tenim una activitat detallada per a <strong>${material}</strong> en el nivell d'<strong>Educació Infantil</strong>. Estem treballant per afegir-ne més!</p>`;
+            return `<div class="activity-sheet"><h2>Ho sentim</h2><p>De moment no tenim una activitat detallada per a <strong>${material}</strong> en el nivell d'<strong>Educació Infantil</strong>. Estem treballant per afegir-ne més!</p><p>Valors de cerca: ${normalizedMaterial}</p></div>`;
         }
 
-        // 2. Obtenir les dades curriculars
+        // 3. Obtenir les dades curriculars
         const curriculum = curriculumData[level];
         const nivellComplet = this.getNivellComplet(userInput);
 
-        // 3. Construir l'HTML final amb la nova estructura detallada
+        // 4. Construir l'HTML final amb la nova estructura detallada
         return `
             <div class="activity-sheet">
                 <!-- TÍTOL I FITXA TÈCNICA -->
