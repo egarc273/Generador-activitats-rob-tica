@@ -38,8 +38,8 @@ const curriculumData = {
             { label: "La vida amb els altres", value: "vida_social" }
         ]
     },
-    primaria: { /*...*/ },
-    secundaria: { /*...*/ }
+    primaria: { sabers: [] }, // Important per evitar errors si es tria primària
+    secundaria: { sabers: [] } // Important per evitar errors si es tria secundària
 };
 
 const activityBank = {
@@ -79,13 +79,16 @@ const activityGenerator = {
             return "Segon Cicle d'Educació Infantil";
         }
         // ... (resta del codi) ...
+        return "Nivell per definir";
     },
 
     generate(userInput) {
         const { level, material, duration, subject: sabersSeleccionats, concept } = userInput;
         const curriculum = curriculumData[level];
-        if (!curriculum) return "<div>Error: No s'han trobat dades curriculars per a aquest nivell.</div>";
+        if (!curriculum) return "<div class='activity-sheet'><h2>Error</h2><p>No s'han trobat dades curriculars per a aquest nivell.</p></div>";
         
+        const normalizedMaterial = material.toLowerCase().replace(/[- ]/g, '');
+
         let prepVocabulary = new Set();
         let prepVisuals = new Set();
         (sabersSeleccionats || []).forEach(saberKey => {
@@ -113,7 +116,7 @@ const activityGenerator = {
         }).join(', ');
         
         const competenciesHTML = curriculum.competencies.map(c => `<li><strong>${c.area} (${c.id}):</strong> ${c.text}</li>`).join('');
-        const challengeText = activityBank[level]?.challenges.find(c => c.material.toLowerCase().replace(/[- ]/g, '') === material)?.text.replace(/{concept}/g, `<strong>${concept}</strong>`) ?? "Repte no definit per a aquest material.";
+        const challengeText = activityBank[level]?.challenges.find(c => c.material === normalizedMaterial)?.text.replace(/{concept}/g, `<strong>${concept}</strong>`) ?? "Repte no definit per a aquest material.";
 
         return `
             <div class="activity-sheet">
@@ -124,12 +127,13 @@ const activityGenerator = {
                     <p><strong>Sabers Implicats:</strong> ${sabersLabels}</p>
                 </div>
                 <h3>1. Marc Curricular (${curriculum.decret})</h3>
-                <p>Aquesta activitat contribueix al desenvolupament de les següents <strong>competències específiques</strong>:</p>
+                <p>Aquesta activitat, de caràcter globalitzat, contribueix al desenvolupament de les següents <strong>competències específiques</strong>:</p>
                 <ul>${competenciesHTML}</ul>
                 <h3>2. Desenvolupament de l'Activitat</h3>
                 <p>Repte principal: ${challengeText}</p>
                 ${preparationHTML}
-                <!-- ... resta de la plantilla ... -->
+                <h3>3. Metodologia</h3>
+                <p>${activityBank[level].baseTemplate.metodologia}</p>
             </div>`;
     }
 };
