@@ -1,25 +1,6 @@
-document.addEventListener('DOMContentLoaded', () => {
-    // Referències als elements del DOM
-    const questionnaireSection = document.getElementById('questionnaire-section');
-    const questionContainer = document.getElementById('question-container');
-    const activitySection = document.getElementById('activity-section');
-    const activityOutput = document.getElementById('activity-output');
-    const progressBar = document.getElementById('progress-bar');
-    
-    const btnAccept = document.getElementById('btn-accept');
-    const btnAdjust = document.getElementById('btn-adjust');
-    const btnDownload = document.getElementById('btn-download');
-    const downloadControls = document.getElementById('download-controls');
-    const feedbackControls = document.getElementById('feedback-controls');
+// ... (codi inicial sense canvis) ...
 
-    // Dades de l'aplicació
-    let currentQuestionIndex = 0;
-    let userAnswers = {};
-    let visibleStep = 1;
-
-    // AQUESTA ESTRUCTURA ÉS LA PART MÉS IMPORTANT
-    // Fixa't que ara les 'options' són objectes amb 'label' (el que veu l'usuari)
-    // i 'value' (el valor intern que fem servir per a la lògica).
+    // --> MODIFICAT: L'array de preguntes s'ha actualitzat
     const questions = [
         {
             key: 'level',
@@ -30,179 +11,69 @@ document.addEventListener('DOMContentLoaded', () => {
                 { label: 'Secundària', value: 'secundaria' }
             ]
         },
+        // ... (preguntes de cicles sense canvis) ...
         {
-            key: 'cycle_primary',
-            text: 'Quin cicle de Primària?',
-            condition: (answers) => answers.level === 'primaria', // <-- Aquesta condició busca el 'value', no el 'label'
-            options: [
-                { label: 'Cicle Inicial', value: 'primaria_inicial' },
-                { label: 'Cicle Mitjà', value: 'primaria_mitja' },
-                { label: 'Cicle Superior', value: 'primaria_superior' }
-            ]
+            key: 'cycle_primary', /* ... */
         },
         {
-            key: 'cycle_secondary',
-            text: 'Quin cicle de Secundària?',
-            condition: (answers) => answers.level === 'secundaria', // <-- Aquesta condició busca el 'value', no el 'label'
-            options: [
-                { label: '1r i 2n d\'ESO', value: 'eso_1_2' },
-                { label: '3r i 4t d\'ESO', value: 'eso_3_4' }
-            ]
+            key: 'cycle_secondary', /* ... */
         },
+        // --> MODIFICAT: La pregunta 'subject' ara és de tipus 'select_dynamic'
         {
             key: 'subject',
-            text: 'En quina àrea o matèria vols contextualitzar l\'activitat?',
-            type: 'text',
-            placeholder: 'Ex: Matemàtiques, Coneixement del Medi...'
+            text: 'Sobre quin saber clau del currículum vols centrar l\'activitat?',
+            type: 'select_dynamic', // Un nou tipus per a la nostra lògica
+            // Les opcions es carregaran des d'una altra font (generator.js)
         },
         {
             key: 'concept',
-            text: 'Hi ha algun concepte específic que vulguis treballar?',
+            text: 'Dins d\'aquest saber, quin concepte específic vols treballar?',
             type: 'text',
-            placeholder: 'Ex: Cicle de l\'aigua, Figures geomètriques...'
+            placeholder: 'Ex: El cicle de l\'aigua, Les emocions...'
+        },
+        // ... (la resta de preguntes sense canvis) ...
+        {
+            key: 'material', /* ... */
         },
         {
-            key: 'material',
-            text: 'Amb quin material de robòtica vols treballar?',
-            options: [
-                { label: 'LEGO Spike Prime', value: 'lego_spike_prime' }, 
-                { label: 'LEGO Spike Essential', value: 'lego_spike_essential' },
-                { label: 'micro:bit', value: 'microbit' },
-                { label: 'Scratch', value: 'scratch' },
-                { label: 'Tale-bot', value: 'tale-bot' },
-                { label: 'Codey Rocky', value: 'codey_rocky' },
-                { label: 'Mbot2', value: 'mbot2' },
-                { label: 'Material desendollat', value: 'unplugged' }
-            ]
-        },
-        {
-            key: 'duration',
-            text: 'Quant de temps vols dedicar a l\'activitat?',
-            options: [
-                { label: '1 hora', value: '1h' },
-                { label: '2 hores', value: '2h' },
-                { label: '3 hores', value: '3h' },
-                { label: '4 hores o més', value: '4h_plus' }
-            ]
+            key: 'duration', /* ... */
         }
     ];
-    
-    // Calculem el nombre total de passos "base" que sempre es mostraran
-    const totalBaseSteps = questions.filter(q => !q.condition).length;
+
+// ... (codi intermig sense canvis) ...
 
     function showQuestion() {
-        if (currentQuestionIndex >= questions.length) {
-            generateActivity();
-            return;
-        }
+        // ... (codi inicial de la funció sense canvis) ...
 
         const question = questions[currentQuestionIndex];
         
-        // Comprovem si la pregunta actual s'ha de saltar
-        if (question.condition && !question.condition(userAnswers)) {
-            currentQuestionIndex++;
-            showQuestion();
-            return;
-        }
+        // ... (lògica de condició sense canvis) ...
 
         let optionsHTML = '';
 
-        if (question.type === 'text') {
+        // --> NOU: Lògica per a la nostra pregunta dinàmica
+        if (question.type === 'select_dynamic') {
+            // Obtenim les opcions del currículum que estan a generator.js
+            const dynamicOptions = activityGenerator.getCurricularSabers(userAnswers);
+            if (dynamicOptions && dynamicOptions.length > 0) {
+                optionsHTML = dynamicOptions.map(option => 
+                    `<button class="option-button" data-value="${option.value}">${option.label}</button>`
+                ).join('');
+            } else {
+                optionsHTML = `<p>No s'han trobat sabers per a aquest nivell. Si us plau, torna enrere.</p>`;
+            }
+        } else if (question.type === 'text') {
             optionsHTML = `
                 <input type="text" id="text-input" placeholder="${question.placeholder}">
                 <button id="submit-text-btn">Següent</button>
             `;
         } else {
-            // AQUÍ ÉS ON ES CREA EL BOTÓ. Assegura que el 'data-value' agafa 'option.value'
             optionsHTML = question.options.map(option => 
                 `<button class="option-button" data-value="${option.value}">${option.label}</button>`
             ).join('');
         }
         
-        // Calculem el nombre total de passos per a la barra de progrés actual
-        const totalVisibleSteps = totalBaseSteps + (userAnswers.level === 'primaria' || userAnswers.level === 'secundaria' ? 1 : 0);
-
-        questionContainer.innerHTML = `
-            <h2>Pas ${visibleStep}/${totalVisibleSteps}</h2>
-            <p>${question.text}</p>
-            <div class="question-options">${optionsHTML}</div>
-        `;
-
-        updateProgressBar(totalVisibleSteps);
-        addEventListenersToOptions();
+        // ... (la resta de la funció 'showQuestion' i altres funcions es mantenen igual) ...
     }
 
-    function addEventListenersToOptions() {
-        if (questions[currentQuestionIndex].type === 'text') {
-            const input = document.getElementById('text-input');
-            document.getElementById('submit-text-btn').addEventListener('click', () => {
-                if (input.value.trim()) {
-                    handleAnswer(input.value.trim());
-                }
-            });
-            input.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter' && input.value.trim()) {
-                    handleAnswer(input.value.trim());
-                }
-            });
-        } else {
-            document.querySelectorAll('.option-button').forEach(button => {
-                button.addEventListener('click', () => {
-                    handleAnswer(button.dataset.value);
-                });
-            });
-        }
-    }
-    
-    function handleAnswer(answer) {
-        const questionKey = questions[currentQuestionIndex].key;
-        userAnswers[questionKey] = answer;
-        currentQuestionIndex++;
-        visibleStep++; 
-        showQuestion();
-    }
-    
-    function updateProgressBar(totalSteps) {
-        // La barra de progrés es basa en els passos visibles.
-        const progress = ((visibleStep - 1) / totalSteps) * 100;
-        progressBar.style.width = `${progress}%`;
-    }
-
-    function generateActivity() {
-        questionnaireSection.classList.add('hidden');
-        activitySection.classList.remove('hidden');
-        
-        const activityHTML = activityGenerator.generate(userAnswers);
-        activityOutput.innerHTML = activityHTML;
-    }
-
-    function resetAndRestart() {
-        currentQuestionIndex = 0;
-        userAnswers = {};
-        visibleStep = 1;
-        activitySection.classList.add('hidden');
-        questionnaireSection.classList.remove('hidden');
-        feedbackControls.classList.remove('hidden');
-        downloadControls.classList.add('hidden');
-        progressBar.style.width = '0%';
-        showQuestion();
-    }
-
-    btnAccept.addEventListener('click', () => {
-        feedbackControls.classList.add('hidden');
-        downloadControls.classList.remove('hidden');
-        activityOutput.style.border = '2px solid green';
-    });
-
-    btnAdjust.addEventListener('click', () => {
-        alert("Aquesta funció permetria ajustar la proposta. Per exemple, fent-la més simple o complexa. En aquesta demo, tornarem a començar el procés.");
-        resetAndRestart();
-    });
-
-    btnDownload.addEventListener('click', () => {
-        window.print();
-    });
-
-    // Iniciar l'aplicació
-    showQuestion();
-});
+// ... (la resta del fitxer script.js es manté sense canvis) ...
