@@ -14,12 +14,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Dades de l'aplicació
     let currentQuestionIndex = 0;
-    const userAnswers = {};
-    let visibleStep = 1; // --> NOU: Un comptador per als passos que l'usuari realment veu.
+    let userAnswers = {};
+    let visibleStep = 1;
 
-    // --> MODIFICAT: L'estructura de preguntes s'ha actualitzat.
-    // Ara les opcions són objectes amb 'label' (el que veu l'usuari) i 'value' (el valor intern).
-    // S'han afegit preguntes amb una propietat 'condition' per mostrar-les només si es compleix la condició.
+    // AQUESTA ESTRUCTURA ÉS LA PART MÉS IMPORTANT
+    // Fixa't que ara les 'options' són objectes amb 'label' (el que veu l'usuari)
+    // i 'value' (el valor intern que fem servir per a la lògica).
     const questions = [
         {
             key: 'level',
@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
         {
             key: 'cycle_primary',
             text: 'Quin cicle de Primària?',
-            condition: (answers) => answers.level === 'primaria', // Només si l'anterior resposta va ser 'primaria'
+            condition: (answers) => answers.level === 'primaria', // <-- Aquesta condició busca el 'value', no el 'label'
             options: [
                 { label: 'Cicle Inicial', value: 'primaria_inicial' },
                 { label: 'Cicle Mitjà', value: 'primaria_mitja' },
@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
         {
             key: 'cycle_secondary',
             text: 'Quin cicle de Secundària?',
-            condition: (answers) => answers.level === 'secundaria', // Només si l'anterior resposta va ser 'secundaria'
+            condition: (answers) => answers.level === 'secundaria', // <-- Aquesta condició busca el 'value', no el 'label'
             options: [
                 { label: '1r i 2n d\'ESO', value: 'eso_1_2' },
                 { label: '3r i 4t d\'ESO', value: 'eso_3_4' }
@@ -87,11 +87,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     ];
     
-    // --> NOU: Calculem el nombre total de passos que seran visibles per a una millor experiència d'usuari
-    const totalVisibleSteps = questions.filter(q => !q.condition).length;
+    // Calculem el nombre total de passos "base" que sempre es mostraran
+    const totalBaseSteps = questions.filter(q => !q.condition).length;
 
-
-    // --> MODIFICAT: La funció ara gestiona les preguntes condicionals.
     function showQuestion() {
         if (currentQuestionIndex >= questions.length) {
             generateActivity();
@@ -100,11 +98,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const question = questions[currentQuestionIndex];
         
-        // --> NOU: Comprovem si la pregunta té una condició i si no es compleix.
-        // Si no es compleix, ens la saltem i passem a la següent.
+        // Comprovem si la pregunta actual s'ha de saltar
         if (question.condition && !question.condition(userAnswers)) {
             currentQuestionIndex++;
-            showQuestion(); // Torna a cridar la funció per a la següent pregunta
+            showQuestion();
             return;
         }
 
@@ -116,20 +113,22 @@ document.addEventListener('DOMContentLoaded', () => {
                 <button id="submit-text-btn">Següent</button>
             `;
         } else {
-            // --> MODIFICAT: Ara llegeix 'option.value' i 'option.label' de l'objecte.
+            // AQUÍ ÉS ON ES CREA EL BOTÓ. Assegura que el 'data-value' agafa 'option.value'
             optionsHTML = question.options.map(option => 
                 `<button class="option-button" data-value="${option.value}">${option.label}</button>`
             ).join('');
         }
         
-        // --> MODIFICAT: Utilitzem el nou comptador de passos visibles.
+        // Calculem el nombre total de passos per a la barra de progrés actual
+        const totalVisibleSteps = totalBaseSteps + (userAnswers.level === 'primaria' || userAnswers.level === 'secundaria' ? 1 : 0);
+
         questionContainer.innerHTML = `
-            <h2>Pas ${visibleStep}/${totalVisibleSteps + (userAnswers.level === 'primaria' || userAnswers.level === 'secundaria' ? 1 : 0) }</h2>
+            <h2>Pas ${visibleStep}/${totalVisibleSteps}</h2>
             <p>${question.text}</p>
             <div class="question-options">${optionsHTML}</div>
         `;
 
-        updateProgressBar();
+        updateProgressBar(totalVisibleSteps);
         addEventListenersToOptions();
     }
 
@@ -159,39 +158,33 @@ document.addEventListener('DOMContentLoaded', () => {
         const questionKey = questions[currentQuestionIndex].key;
         userAnswers[questionKey] = answer;
         currentQuestionIndex++;
-        
-        // --> NOU: Només incrementem el pas visible si la pregunta s'ha mostrat.
         visibleStep++; 
-        
         showQuestion();
     }
     
-    function updateProgressBar() {
-        // La barra de progrés es basa en l'índex real per ser més precisa.
-        const progress = (currentQuestionIndex / questions.length) * 100;
+    function updateProgressBar(totalSteps) {
+        // La barra de progrés es basa en els passos visibles.
+        const progress = ((visibleStep - 1) / totalSteps) * 100;
         progressBar.style.width = `${progress}%`;
     }
 
     function generateActivity() {
         questionnaireSection.classList.add('hidden');
         activitySection.classList.remove('hidden');
-
-        // Mostrem les respostes per comprovar que tot s'ha guardat bé
-        console.log("Respostes de l'usuari:", userAnswers); 
         
         const activityHTML = activityGenerator.generate(userAnswers);
         activityOutput.innerHTML = activityHTML;
     }
 
-    // --> MODIFICAT: Reseteja també el comptador de pas visible.
     function resetAndRestart() {
         currentQuestionIndex = 0;
-        visibleStep = 1; // Reseteja el comptador
-        Object.keys(userAnswers).forEach(key => delete userAnswers[key]);
+        userAnswers = {};
+        visibleStep = 1;
         activitySection.classList.add('hidden');
         questionnaireSection.classList.remove('hidden');
         feedbackControls.classList.remove('hidden');
         downloadControls.classList.add('hidden');
+        progressBar.style.width = '0%';
         showQuestion();
     }
 
